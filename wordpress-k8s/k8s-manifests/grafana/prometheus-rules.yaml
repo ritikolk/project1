@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: nginx-rules
+spec:
+  groups:
+  - name: nginx
+    rules:
+    - alert: HighNginxErrorRate
+      expr: rate(nginx_http_requests_total{status="5xx"}[5m]) > 5
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High error rate for Nginx"
+        description: "Nginx has a high rate of 5xx errors."
